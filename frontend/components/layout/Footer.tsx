@@ -2,21 +2,21 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-surface border-t border-border mt-auto">
+    <footer className="glass border-t border-white/10 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Copyright */}
-          <div className="text-sm text-muted">
+          <div className="text-sm text-white/70">
             © {currentYear} Todo App. All rights reserved.
           </div>
 
           {/* Social Links */}
           <div className="flex items-center gap-6">
             <a
-              href="https://github.com/ghaniya08"
+              href="https://github.com/radiyakhan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-primary transition-colors duration-200"
+              className="text-white/70 hover:text-white transition-all duration-300 hover:scale-110"
               aria-label="GitHub"
             >
               <svg
@@ -34,10 +34,10 @@ export function Footer() {
             </a>
 
             <a
-              href="https://instagram.com/ghaniya08"
+              href="https://instagram.com/radiya._.345"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-primary transition-colors duration-200"
+              className="text-white/70 hover:text-white transition-all duration-300 hover:scale-110"
               aria-label="Instagram"
             >
               <svg
@@ -56,7 +56,7 @@ export function Footer() {
 
             <a
               href="#"
-              className="text-muted hover:text-primary transition-colors duration-200 cursor-not-allowed opacity-50"
+              className="text-white/40 cursor-not-allowed"
               aria-label="LinkedIn (Coming Soon)"
               title="LinkedIn profile coming soon"
             >
@@ -73,8 +73,8 @@ export function Footer() {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-6 pt-6 border-t border-border text-center">
-          <p className="text-xs text-muted">
+        <div className="mt-6 pt-6 border-t border-white/10 text-center">
+          <p className="text-xs text-white/60">
             Built with Next.js, TypeScript, and Tailwind CSS
           </p>
         </div>

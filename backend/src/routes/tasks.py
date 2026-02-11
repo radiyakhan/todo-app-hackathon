@@ -74,6 +74,7 @@ def verify_user_match(url_user_id: str, authenticated_user_id: str) -> None:
                         "title": "Buy groceries",
                         "description": "Milk, eggs, bread",
                         "completed": False,
+                        "priority": "medium",
                         "created_at": "2026-02-08T14:30:00Z",
                         "updated_at": "2026-02-08T14:30:00Z",
                     }
@@ -138,6 +139,7 @@ async def create_task(
                             "title": "Buy groceries",
                             "description": "Milk, eggs, bread",
                             "completed": False,
+                            "priority": "medium",
                             "created_at": "2026-02-08T14:30:00Z",
                             "updated_at": "2026-02-08T14:30:00Z",
                         }
@@ -233,7 +235,7 @@ async def get_task(
     response_model=TaskResponse,
     status_code=status.HTTP_200_OK,
     summary="Update a task",
-    description="Updates the title and/or description of an existing task",
+    description="Updates the title, description, and/or priority of an existing task",
     responses={
         200: {"description": "Task successfully updated"},
         400: {"description": "Invalid input data"},

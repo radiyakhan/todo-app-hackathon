@@ -7,7 +7,7 @@ Pydantic request/response schemas for Task API.
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel, Field, validator
 
 
@@ -18,6 +18,7 @@ class TaskCreate(BaseModel):
     Attributes:
         title: Short description of the task (required, 1-200 chars)
         description: Detailed information about the task (optional, max 1000 chars)
+        priority: Task priority level (optional, defaults to "medium")
     """
 
     title: str = Field(
@@ -29,6 +30,10 @@ class TaskCreate(BaseModel):
         default=None,
         max_length=1000,
         description="Detailed information about the task (optional)",
+    )
+    priority: Literal["high", "medium", "low"] = Field(
+        default="medium",
+        description="Task priority level (high, medium, low)",
     )
 
     @validator("title")
@@ -46,6 +51,7 @@ class TaskUpdate(BaseModel):
     Attributes:
         title: Short description of the task (required, 1-200 chars)
         description: Detailed information about the task (optional, max 1000 chars)
+        priority: Task priority level (optional)
     """
 
     title: str = Field(
@@ -57,6 +63,10 @@ class TaskUpdate(BaseModel):
         default=None,
         max_length=1000,
         description="Detailed information about the task (optional)",
+    )
+    priority: Optional[Literal["high", "medium", "low"]] = Field(
+        default=None,
+        description="Task priority level (high, medium, low)",
     )
 
     @validator("title")
@@ -77,6 +87,7 @@ class TaskResponse(BaseModel):
         title: Task title
         description: Task description (optional)
         completed: Completion status
+        priority: Task priority level
         created_at: Creation timestamp
         updated_at: Last update timestamp
     """
@@ -86,6 +97,7 @@ class TaskResponse(BaseModel):
     title: str
     description: Optional[str]
     completed: bool
+    priority: str
     created_at: datetime
     updated_at: datetime
 

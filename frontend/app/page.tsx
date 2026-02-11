@@ -2,7 +2,6 @@
 
 import { useAuth } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { useEffect, useRef } from 'react';
 
@@ -34,15 +33,15 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-50 glass border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 glass-card flex items-center justify-center">
                 <svg
-                  className="w-5 h-5 text-white"
+                  className="w-6 h-6 text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -55,23 +54,22 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <span className="text-xl font-semibold text-foreground">Todo App</span>
+              <span className="text-xl font-bold text-white">Todo App</span>
             </div>
 
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
+            <div className="flex items-center gap-3">
               {!isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={() => router.push('/dashboard')} size="sm">
+                    <Button onClick={() => router.push('/dashboard')} size="sm" variant="glass">
                       Dashboard
                     </Button>
                   ) : (
                     <>
-                      <Button onClick={handleSignIn} variant="ghost" size="sm" className="hidden sm:inline-flex">
+                      <Button onClick={handleSignIn} variant="secondary" size="sm" className="hidden sm:inline-flex">
                         Sign In
                       </Button>
-                      <Button onClick={handleGetStarted} size="sm">
+                      <Button onClick={handleGetStarted} size="sm" variant="glass">
                         Get Started
                       </Button>
                     </>
@@ -86,14 +84,14 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Organize Your Life with{' '}
-            <span className="bg-gradient-to-r from-primary via-primary-light to-primary-lighter bg-clip-text text-transparent">
+            <span className="text-white drop-shadow-lg">
               Smart Todo Management
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-muted mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
             A beautiful, intuitive task management application that helps you stay productive and organized.
             Create, manage, and complete your tasks with ease.
           </p>
@@ -102,12 +100,12 @@ export default function HomePage() {
             {!isLoading && (
               <>
                 {isAuthenticated ? (
-                  <Button onClick={() => router.push('/dashboard')} size="lg" className="w-full sm:w-auto">
+                  <Button onClick={() => router.push('/dashboard')} size="lg" variant="glass" className="w-full sm:w-auto">
                     Go to Dashboard
                   </Button>
                 ) : (
                   <>
-                    <Button onClick={handleGetStarted} size="lg" className="w-full sm:w-auto">
+                    <Button onClick={handleGetStarted} size="lg" variant="glass" className="w-full sm:w-auto">
                       Get Started Free
                     </Button>
                     <Button onClick={handleSignIn} variant="secondary" size="lg" className="w-full sm:w-auto">
@@ -121,9 +119,8 @@ export default function HomePage() {
 
           {/* Feature Preview */}
           <div className="relative max-w-3xl mx-auto animate-slide-up">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary-light/20 to-primary-lighter/20 blur-3xl -z-10" />
-            <div className="bg-surface border border-border rounded-2xl shadow-2xl p-6 sm:p-8">
-              <div className="space-y-4"> 
+            <div className="glass-card p-6 sm:p-8 shadow-2xl">
+              <div className="space-y-4">
                 {[
                   { title: 'Complete project proposal', completed: true },
                   { title: 'Review team feedback', completed: true },
@@ -132,18 +129,18 @@ export default function HomePage() {
                 ].map((task, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border hover:border-primary transition-colors"
+                    className="flex items-center gap-3 p-4 glass-hover rounded-xl transition-all duration-300"
                   >
                     <div
-                      className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                      className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 ${
                         task.completed
-                          ? 'bg-primary border-primary'
-                          : 'border-border'
+                          ? 'bg-success border-success'
+                          : 'border-white/40'
                       }`}
                     >
                       {task.completed && (
                         <svg
-                          className="w-3 h-3 text-white"
+                          className="w-4 h-4 text-white"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -158,8 +155,8 @@ export default function HomePage() {
                       )}
                     </div>
                     <span
-                      className={`text-left ${
-                        task.completed ? 'line-through text-muted' : 'text-foreground'
+                      className={`text-left font-medium ${
+                        task.completed ? 'line-through text-white/60' : 'text-white'
                       }`}
                     >
                       {task.title}
@@ -173,18 +170,18 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 sm:px-6 lg:px-8 py-20 bg-accent/30">
+      <section className="px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-slide-up">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Everything You Need to Stay Productive
             </h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto">
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
               Powerful features designed to help you manage tasks efficiently and achieve your goals.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: (
@@ -235,11 +232,11 @@ export default function HomePage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 ),
-                title: 'Dark Mode',
-                description: 'Switch between light and dark themes for comfortable viewing any time of day.',
+                title: 'Beautiful Design',
+                description: 'Modern glassmorphism UI with smooth animations for a delightful user experience.',
               },
               {
                 icon: (
@@ -255,12 +252,12 @@ export default function HomePage() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="bg-surface border border-border rounded-xl p-6 hover:border-primary transition-all duration-300 hover:shadow-lg animate-slide-up"
+                className="glass-card glass-hover p-6 animate-slide-up"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-14 h-14 glass-card flex items-center justify-center mb-4">
                   <svg
-                    className="w-6 h-6 text-primary"
+                    className="w-7 h-7 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -269,10 +266,10 @@ export default function HomePage() {
                     {feature.icon}
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-muted leading-relaxed">{feature.description}</p>
+                <p className="text-white/70 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -282,14 +279,14 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
             Ready to Get Organized?
           </h2>
-          <p className="text-lg text-muted mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto">
             Join thousands of users who are already managing their tasks more effectively.
           </p>
           {!isLoading && !isAuthenticated && (
-            <Button onClick={handleGetStarted} size="lg">
+            <Button onClick={handleGetStarted} size="lg" variant="glass">
               Start Managing Tasks Now
             </Button>
           )}

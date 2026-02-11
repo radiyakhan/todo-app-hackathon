@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'glass';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   children: React.ReactNode;
@@ -16,19 +16,20 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary shadow-sm hover:shadow-md',
-    secondary: 'bg-surface text-foreground border border-border hover:bg-accent hover:border-primary focus:ring-primary',
-    danger: 'bg-error text-white hover:bg-red-700 focus:ring-error shadow-sm hover:shadow-md',
-    ghost: 'bg-transparent text-foreground hover:bg-accent hover:text-primary focus:ring-primary',
+    primary: 'glass-button text-white hover:scale-105 shadow-lg',
+    secondary: 'bg-white/10 text-white border border-white/20 hover:bg-white/20 hover:scale-105 backdrop-blur-md',
+    danger: 'bg-error/80 text-white hover:bg-error hover:scale-105 shadow-lg backdrop-blur-md',
+    ghost: 'bg-transparent text-white hover:bg-white/10 backdrop-blur-sm',
+    glass: 'glass-button text-white',
   };
 
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-6 py-3 text-base',
+    lg: 'px-8 py-4 text-lg',
   };
 
   return (
@@ -40,7 +41,7 @@ export function Button({
       {isLoading ? (
         <>
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            className="animate-spin -ml-1 mr-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

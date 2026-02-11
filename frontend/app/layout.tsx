@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -30,22 +30,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${inter.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <ThemeProvider>
           <AuthProvider>
             <div className="flex-1 flex flex-col">
               {children}
             </div>
-            <Footer />
             <Toaster
               position="bottom-right"
               toastOptions={{
                 duration: 3000,
                 style: {
-                  background: 'var(--color-surface)',
-                  color: 'var(--color-foreground)',
-                  border: '1px solid var(--color-border)',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(20px)',
+                  color: 'white',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
                 },
                 className: 'sonner-toast',
               }}

@@ -1,14 +1,14 @@
 export function Spinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12',
+    sm: 'h-5 w-5',
+    md: 'h-10 w-10',
+    lg: 'h-16 w-16',
   };
 
   return (
     <div className="flex items-center justify-center">
       <svg
-        className={`animate-spin ${sizeClasses[size]} text-primary`}
+        className={`animate-spin ${sizeClasses[size]} text-white`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

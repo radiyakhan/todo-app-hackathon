@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-5
 feature: 002-auth-jwt
 branch: 002-auth-jwt
-user: Ghaniya Khan
+user: Radiyakhan Khan
 command: /sp.implement
 labels: ["authentication", "jwt", "backend", "user-isolation", "security", "implementation"]
 links:

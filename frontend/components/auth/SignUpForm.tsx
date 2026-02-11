@@ -46,14 +46,14 @@ export function SignUpForm() {
       toast.success('Account created successfully!', {
         description: `Welcome, ${data.name}!`,
       });
-      router.push('/dashboard');
+      // Don't manually redirect - let the auth layout handle it
+      // This prevents race conditions with auth state updates
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Sign up failed. Please try again.';
       setError(errorMessage);
       toast.error('Sign up failed', {
         description: errorMessage,
       });
-    } finally {
       setIsLoading(false);
     }
   };

@@ -32,9 +32,16 @@ app = FastAPI(
 # Configure CORS middleware
 # [Task]: T013 - Enable credentials for cookie-based authentication
 # [From]: specs/002-auth-jwt/plan.md §CORS Configuration
+# IMPORTANT: When allow_credentials=True, allow_origins cannot be ["*"]
+# Must specify exact origins for cookie-based authentication to work
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Configure specific origins in production
+    allow_origins=[
+        "http://localhost:3000",  # Local development frontend
+        "http://127.0.0.1:3000",  # Alternative localhost
+        "http://localhost:3001",  # Alternative port if 3000 is in use
+        "http://127.0.0.1:3001",  # Alternative localhost on port 3001
+    ],
     allow_credentials=True,  # Required for httpOnly cookies
     allow_methods=["*"],
     allow_headers=["*"],

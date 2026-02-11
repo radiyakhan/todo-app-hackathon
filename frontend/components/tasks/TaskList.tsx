@@ -14,15 +14,20 @@ export function TaskList({ tasks, onToggleComplete, onEdit, onDelete }: TaskList
   }
 
   return (
-    <div className="space-y-3">
-      {tasks.map((task) => (
-        <TaskItem
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {tasks.map((task, index) => (
+        <div
           key={task.id}
-          task={task}
-          onToggleComplete={onToggleComplete}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
+          style={{ animationDelay: `${index * 100}ms` }}
+          className="animate-fade-in-up"
+        >
+          <TaskItem
+            task={task}
+            onToggleComplete={onToggleComplete}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        </div>
       ))}
     </div>
   );

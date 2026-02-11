@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 animate-fade-in">
         <div>
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 glass-card flex items-center justify-center shadow-xl animate-float">
               <svg
-                className="w-10 h-10 text-white"
+                className="w-12 h-12 text-white"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -23,24 +23,24 @@ export default function SignInPage() {
               </svg>
             </div>
           </div>
-          <h2 className="text-center text-3xl font-bold text-foreground">
+          <h2 className="text-center text-4xl font-bold text-white">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-muted">
+          <p className="mt-3 text-center text-base text-white/70">
             Welcome back! Please enter your credentials
           </p>
         </div>
 
-        <div className="mt-8 bg-surface py-8 px-4 shadow-lg border border-border sm:rounded-xl sm:px-10">
+        <div className="mt-8 glass-card py-8 px-4 shadow-2xl sm:rounded-2xl sm:px-10">
           <SignInForm />
 
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border" />
+                <div className="w-full border-t border-white/10" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-surface text-muted">
+                <span className="px-3 glass-card text-white/80 py-1">
                   Don't have an account?
                 </span>
               </div>
@@ -49,9 +49,9 @@ export default function SignInPage() {
             <div className="mt-6 text-center">
               <Link
                 href="/signup"
-                className="font-medium text-primary hover:text-primary-dark transition-colors"
+                className="font-semibold text-white hover:text-white/80 transition-all duration-300 hover:scale-105 inline-block"
               >
-                Create an account
+                Create an account →
               </Link>
             </div>
           </div>
@@ -60,9 +60,12 @@ export default function SignInPage() {
         <div className="text-center">
           <Link
             href="/"
-            className="text-sm text-muted hover:text-primary transition-colors"
+            className="text-sm text-white/70 hover:text-white transition-all duration-300 inline-flex items-center gap-2"
           >
-            ← Back to home
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to home
           </Link>
         </div>
       </div>

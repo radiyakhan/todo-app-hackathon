@@ -21,6 +21,7 @@ class Task(SQLModel, table=True):
         title: Short description of the task (required, max 200 chars)
         description: Detailed information about the task (optional, max 1000 chars)
         completed: Completion status (true = done, false = pending)
+        priority: Task priority level (high, medium, low)
         created_at: UTC timestamp when task was created
         updated_at: UTC timestamp when task was last modified
     """
@@ -58,6 +59,13 @@ class Task(SQLModel, table=True):
     completed: bool = Field(
         default=False,
         description="Completion status (true = done, false = pending)",
+    )
+
+    # Task Priority
+    priority: str = Field(
+        default="medium",
+        max_length=10,
+        description="Task priority level (high, medium, low)",
     )
 
     # Timestamps
