@@ -5,11 +5,11 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
   return (
-    <div className="rounded-lg bg-error/10 p-4 border border-error/30">
+    <div className="glass-card p-6 border-error/30 animate-slide-down">
       <div className="flex">
         <div className="flex-shrink-0">
           <svg
-            className="h-5 w-5 text-error"
+            className="h-6 w-6 text-red-300"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -22,11 +22,11 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
           </svg>
         </div>
         <div className="ml-3 flex-1">
-          <p className="text-sm text-error">{message}</p>
+          <p className="text-sm font-medium text-white">{message}</p>
           {onRetry && (
             <button
               onClick={onRetry}
-              className="mt-2 text-sm font-medium text-error hover:text-red-700 underline transition-colors"
+              className="mt-3 text-sm font-semibold text-white hover:text-white/80 underline transition-colors"
             >
               Try again
             </button>

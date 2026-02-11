@@ -41,14 +41,14 @@ export function SignInForm() {
       toast.success('Welcome back!', {
         description: 'You have successfully signed in.',
       });
-      router.push('/dashboard');
+      // Don't manually redirect - let the auth layout handle it
+      // This prevents race conditions with auth state updates
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Sign in failed. Please check your credentials.';
       setError(errorMessage);
       toast.error('Sign in failed', {
         description: errorMessage,
       });
-    } finally {
       setIsLoading(false);
     }
   };

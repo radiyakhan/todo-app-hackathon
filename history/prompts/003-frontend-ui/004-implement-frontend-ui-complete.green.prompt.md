@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-5
 feature: 003-frontend-ui
 branch: 003-frontend-ui
-user: Ghaniya Khan
+user: Radiyakhan Khan
 command: /sp.implement
 labels: ["frontend", "nextjs", "implementation", "authentication", "task-management", "complete"]
 links:

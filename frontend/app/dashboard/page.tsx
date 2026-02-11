@@ -7,12 +7,14 @@ import { api } from '@/lib/api';
 import { Task, TaskCreate, TaskUpdate } from '@/types/task';
 import { TaskList } from '@/components/tasks/TaskList';
 import { TaskForm } from '@/components/tasks/TaskForm';
+import { CalendarView } from '@/components/tasks/CalendarView';
 import { EmptyState } from '@/components/tasks/EmptyState';
 import { Spinner } from '@/components/ui/Spinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
-import { Button } from '@/components/ui/Button';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { toast } from 'sonner';
+
+type ViewMode = 'list' | 'calendar';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -23,6 +25,8 @@ export default function DashboardPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   useEffect(() => {
     // Redirect to signin if not authenticated
@@ -151,152 +155,198 @@ export default function DashboardPage() {
     }
   };
 
-  // Show loading spinner while checking auth
-  if (authLoading) {
+  // Show loading spinner while checking auth or if user data is not yet available
+  if (authLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center">
         <Spinner size="lg" />
       </div>
     );
   }
 
-  // Don't render if not authenticated (will redirect)
-  if (!isAuthenticated || !user) {
-    return null;
+  // Redirect to signin if not authenticated (handled by useEffect above)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-surface shadow-sm border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-surface/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">My Tasks</h1>
-                <p className="text-sm text-muted">Welcome back, {user.name}!</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <Button variant="ghost" onClick={handleSignout} size="sm">
-                Sign Out
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <Sidebar
+        tasks={tasks}
+        onSignout={handleSignout}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && (
-          <div className="mb-6 animate-slide-down">
-            <ErrorMessage message={error} onRetry={loadTasks} />
-          </div>
-        )}
+      <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="lg:hidden fixed top-4 left-4 z-30 w-12 h-12 glass-button rounded-xl flex items-center justify-center shadow-lg"
+          aria-label="Open menu"
+        >
+          <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
 
-        {/* Create/Edit Task Form */}
-        <div className="bg-surface p-6 rounded-xl shadow-sm border border-border mb-8 animate-fade-in">
-          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-            {editingTask ? (
-              <>
-                <svg
-                  className="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                Edit Task
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Create New Task
-              </>
-            )}
-          </h2>
-          <TaskForm
-            task={editingTask || undefined}
-            onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
-            onCancel={editingTask ? () => setEditingTask(null) : undefined}
-            isLoading={isCreating || isUpdating}
-          />
-        </div>
-
-        {/* Task List */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                />
-              </svg>
-              Your Tasks
-              <span className="ml-2 px-2.5 py-0.5 text-sm font-medium bg-primary/10 text-primary rounded-full">
-                {tasks.length}
-              </span>
-            </h2>
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8 animate-fade-in mt-16 lg:mt-0">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Welcome back, {user.name}!</h1>
+            <p className="text-base sm:text-lg text-white/70">Manage your tasks and stay productive</p>
           </div>
 
-          {isLoadingTasks ? (
-            <div className="bg-surface p-12 rounded-xl shadow-sm border border-border">
-              <Spinner size="lg" />
+          {error && (
+            <div className="mb-6 animate-slide-down">
+              <ErrorMessage message={error} onRetry={loadTasks} />
             </div>
-          ) : tasks.length === 0 ? (
-            <div className="bg-surface rounded-xl shadow-sm border border-border">
-              <EmptyState />
-            </div>
-          ) : (
-            <TaskList
-              tasks={tasks}
-              onToggleComplete={handleToggleComplete}
-              onEdit={setEditingTask}
-              onDelete={handleDeleteTask}
-            />
           )}
+
+          {/* Create/Edit Task Form */}
+          <div className="glass-card p-6 sm:p-8 mb-10 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+              {editingTask ? (
+                <>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                    <svg
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">Edit Task</h2>
+                    <p className="text-xs sm:text-sm text-white/70">Update your task details</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                    <svg
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">Create New Task</h2>
+                    <p className="text-xs sm:text-sm text-white/70">Add a new task to your list</p>
+                  </div>
+                </>
+              )}
+            </div>
+            <TaskForm
+              task={editingTask || undefined}
+              onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
+              onCancel={editingTask ? () => setEditingTask(null) : undefined}
+              isLoading={isCreating || isUpdating}
+            />
+          </div>
+
+          {/* Task List Section */}
+          <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                  <svg
+                    className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">Your Tasks</h2>
+                  <p className="text-xs sm:text-sm text-white/70">Manage and track your progress</p>
+                </div>
+              </div>
+
+              {/* View Toggle */}
+              <div className="flex gap-2 glass-card p-1">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewMode === 'list'
+                      ? 'bg-white/20 text-white shadow-lg'
+                      : 'text-white/60 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  <span className="hidden sm:inline">List</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('calendar')}
+                  className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
+                    viewMode === 'calendar'
+                      ? 'bg-white/20 text-white shadow-lg'
+                      : 'text-white/60 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="hidden sm:inline">Calendar</span>
+                </button>
+              </div>
+            </div>
+
+            {isLoadingTasks ? (
+              <div className="glass-card p-16 flex flex-col items-center justify-center">
+                <Spinner size="lg" />
+                <p className="mt-4 text-sm text-white/70">Loading your tasks...</p>
+              </div>
+            ) : tasks.length === 0 ? (
+              <div className="glass-card">
+                <EmptyState />
+              </div>
+            ) : viewMode === 'list' ? (
+              <TaskList
+                tasks={tasks}
+                onToggleComplete={handleToggleComplete}
+                onEdit={setEditingTask}
+                onDelete={handleDeleteTask}
+              />
+            ) : (
+              <CalendarView
+                tasks={tasks}
+                onToggleComplete={handleToggleComplete}
+                onEdit={setEditingTask}
+                onDelete={handleDeleteTask}
+              />
+            )}
+          </div>
         </div>
       </main>
     </div>

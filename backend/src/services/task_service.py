@@ -36,6 +36,7 @@ class TaskService:
             user_id=user_id,
             title=task_data.title,
             description=task_data.description,
+            priority=task_data.priority,
             completed=False,
         )
         session.add(task)
@@ -91,7 +92,7 @@ class TaskService:
         session: Session, user_id: str, task_id: int, task_data: TaskUpdate
     ) -> Optional[Task]:
         """
-        Update a task's title and description.
+        Update a task's title, description, and priority.
 
         Args:
             session: Database session
@@ -106,6 +107,8 @@ class TaskService:
         if task:
             task.title = task_data.title
             task.description = task_data.description
+            if task_data.priority is not None:
+                task.priority = task_data.priority
             task.updated_at = datetime.utcnow()
             session.add(task)
             session.commit()

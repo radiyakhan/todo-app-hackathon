@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-5
 feature: 002-auth-jwt
 branch: 002-auth-jwt
-user: Ghaniya Khan
+user: Radiyakhan Khan
 command: /sp.tasks 002-auth-jwt
 labels: ["authentication", "jwt", "better-auth", "task-generation", "spec-driven-development"]
 links:

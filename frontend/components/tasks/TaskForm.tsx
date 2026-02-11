@@ -5,12 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Task, TaskCreate } from '@/types/task';
+import { Task, TaskCreate, Priority } from '@/types/task';
 import { useEffect } from 'react';
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
-  description: z.string().max(1000, 'Description is too long').optional(),
+  priority: z.enum(['high', 'medium', 'low']),
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
@@ -32,15 +32,17 @@ export function TaskForm({ task, onSubmit, onCancel, isLoading = false }: TaskFo
     resolver: zodResolver(taskSchema),
     defaultValues: task ? {
       title: task.title,
-      description: task.description || '',
-    } : undefined,
+      priority: task.priority,
+    } : {
+      priority: 'medium',
+    },
   });
 
   useEffect(() => {
     if (task) {
       reset({
         title: task.title,
-        description: task.description || '',
+        priority: task.priority,
       });
     }
   }, [task, reset]);
@@ -48,46 +50,91 @@ export function TaskForm({ task, onSubmit, onCancel, isLoading = false }: TaskFo
   const handleFormSubmit = async (data: TaskFormData) => {
     await onSubmit({
       title: data.title,
-      description: data.description || undefined,
+      priority: data.priority,
+      description: '', // Send empty string for description
     });
     if (!task) {
-      reset(); // Clear form after creating new task
+      reset({ title: '', priority: 'medium' }); // Clear form after creating new task
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-      <Input
-        {...register('title')}
-        label="Title"
-        placeholder="Enter task title"
-        error={errors.title?.message}
-        disabled={isLoading}
-      />
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <div>
+        <Input
+          {...register('title')}
+          label="Task Title"
+          placeholder="Enter a clear, actionable task title..."
+          error={errors.title?.message}
+          disabled={isLoading}
+          className="transition-all duration-300"
+        />
+      </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1.5">
-          Description (optional)
+        <label htmlFor="priority" className="block text-sm font-semibold text-white mb-2">
+          Priority Level
         </label>
-        <textarea
-          {...register('description')}
-          id="description"
-          rows={3}
-          className="block w-full px-3 py-2 bg-surface border border-border rounded-lg shadow-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-accent disabled:cursor-not-allowed transition-all duration-200 hover:border-primary"
-          placeholder="Enter task description"
+        <select
+          {...register('priority')}
+          id="priority"
+          className="glass-input block w-full px-4 py-3 rounded-xl shadow-lg text-white focus:outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           disabled={isLoading}
-        />
-        {errors.description && (
-          <p className="mt-1.5 text-sm text-error">{errors.description.message}</p>
+        >
+          <option value="high" className="bg-gray-900 text-white">
+            🔴 High Priority
+          </option>
+          <option value="medium" className="bg-gray-900 text-white">
+            🟡 Medium Priority
+          </option>
+          <option value="low" className="bg-gray-900 text-white">
+            🟢 Low Priority
+          </option>
+        </select>
+        {errors.priority && (
+          <p className="mt-2 text-sm text-red-300 flex items-center gap-1.5">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            {errors.priority.message}
+          </p>
         )}
       </div>
 
-      <div className="flex gap-2 pt-2">
-        <Button type="submit" isLoading={isLoading}>
-          {task ? 'Update Task' : 'Add Task'}
+      <div className="flex gap-3 pt-2">
+        <Button
+          type="submit"
+          variant="glass"
+          isLoading={isLoading}
+          className="shadow-lg hover:shadow-xl"
+        >
+          {task ? (
+            <>
+              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Update Task
+            </>
+          ) : (
+            <>
+              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Add Task
+            </>
+          )}
         </Button>
         {onCancel && (
-          <Button type="button" variant="secondary" onClick={onCancel} disabled={isLoading}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onCancel}
+            disabled={isLoading}
+            className="transition-all duration-300"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
             Cancel
           </Button>
         )}

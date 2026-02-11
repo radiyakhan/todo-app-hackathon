@@ -15,7 +15,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-foreground mb-1.5"
+            className="block text-sm font-semibold text-white mb-2"
           >
             {label}
           </label>
@@ -24,12 +24,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={`
-            block w-full px-3 py-2 bg-surface border rounded-lg shadow-sm
-            text-foreground placeholder:text-muted
-            focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
-            disabled:bg-accent disabled:cursor-not-allowed disabled:text-muted
-            transition-all duration-200
-            ${error ? 'border-error focus:ring-error focus:border-error' : 'border-border hover:border-primary'}
+            glass-input block w-full px-4 py-3 rounded-xl shadow-lg
+            text-white placeholder:text-white/50
+            focus:outline-none transition-all duration-300
+            disabled:opacity-50 disabled:cursor-not-allowed
+            ${error ? 'border-error/50 focus:border-error' : 'focus:border-white/40'}
             ${className}
           `}
           aria-invalid={error ? 'true' : 'false'}
@@ -37,12 +36,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="mt-1.5 text-sm text-error">
+          <p id={`${inputId}-error`} className="mt-2 text-sm text-red-300 flex items-center gap-1.5">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
             {error}
           </p>
         )}
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="mt-1.5 text-sm text-muted">
+          <p id={`${inputId}-helper`} className="mt-2 text-sm text-white/60">
             {helperText}
           </p>
         )}
