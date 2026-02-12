@@ -1,12 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api, AuthenticationError } from '@/lib/api';
+import { api } from '@/lib/api';
 import type { User, UserSession } from '@/types/user';
 
 interface AuthContextType extends UserSession {
-  signin: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name: string) => Promise<void>;
+  signin: (email: string, password: string) => Promise<User>;
+  signup: (email: string, password: string, name: string) => Promise<User>;
   signout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -17,7 +17,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is authenticated on mount
   useEffect(() => {
     checkAuth();
   }, []);
@@ -26,38 +25,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const user = await api.auth.me();
       setUser(user);
-    } catch (error) {
-      // Not authenticated or session expired
+    } catch {
       setUser(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signin = async (email: string, password: string) => {
+  const signin = async (email: string, password: string): Promise<User> => {
     const response = await api.auth.signin({ email, password });
     setUser(response);
-    // Return the user to ensure state is set before redirect
     return response;
   };
 
-  const signup = async (email: string, password: string, name: string) => {
+  const signup = async (
+    email: string,
+    password: string,
+    name: string
+  ): Promise<User> => {
     const response = await api.auth.signup({ email, password, name });
     setUser(response);
-    // Return the user to ensure state is set before redirect
     return response;
   };
 
-  const signout = async () => {
+  const signout = async (): Promise<void> => {
     await api.auth.signout();
     setUser(null);
   };
 
-  const refreshUser = async () => {
+  const refreshUser = async (): Promise<void> => {
     try {
       const user = await api.auth.me();
       setUser(user);
-    } catch (error) {
+    } catch {
       setUser(null);
     }
   };
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
