@@ -41,8 +41,8 @@ export function SignInForm() {
       toast.success('Welcome back!', {
         description: 'You have successfully signed in.',
       });
-      // Don't manually redirect - let the auth layout handle it
-      // This prevents race conditions with auth state updates
+      // Explicitly redirect to dashboard after successful signin
+      router.push('/dashboard');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Sign in failed. Please check your credentials.';
       setError(errorMessage);

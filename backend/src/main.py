@@ -41,6 +41,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",  # Alternative localhost
         "http://localhost:3001",  # Alternative port if 3000 is in use
         "http://127.0.0.1:3001",  # Alternative localhost on port 3001
+        "https://radiya345-todo-app-frontend.vercel.app",  # Production frontend (update with your actual URL)
     ],
     allow_credentials=True,  # Required for httpOnly cookies
     allow_methods=["*"],

@@ -16,7 +16,7 @@ export default function AuthLayout({
   useEffect(() => {
     // Redirect authenticated users to dashboard
     if (!isLoading && isAuthenticated) {
-      router.push('/dashboard');
+      router.replace('/dashboard');
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -31,7 +31,11 @@ export default function AuthLayout({
 
   // Don't render auth pages if user is authenticated (will redirect)
   if (isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return <>{children}</>;
