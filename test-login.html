@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+</head>
+<body>
+    <h1>Login Test</h1>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" value="logintest@example.com" /><br><br>
+        <input type="password" id="password" placeholder="Password" value="testpass123" /><br><br>
+        <button type="submit">Sign In</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            try {
+                // Test signin
+                const signinResponse = await fetch('http://localhost:8000/api/auth/signin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+
+                const signinData = await signinResponse.json();
+                resultDiv.innerHTML = '<h2>Signin Response:</h2><pre>' + JSON.stringify(signinData, null, 2) + '</pre>';
+
+                // Test /me endpoint
+                const meResponse = await fetch('http://localhost:8000/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                const meData = await meResponse.json();
+                resultDiv.innerHTML += '<h2>/me Response:</h2><pre>' + JSON.stringify(meData, null, 2) + '</pre>';
+
+            } catch (error) {
+                resultDiv.innerHTML = '<h2>Error:</h2><pre>' + error.message + '</pre>';
+            }
+        });
+    </script>
+</body>
+</html>
